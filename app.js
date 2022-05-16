@@ -12,6 +12,7 @@ app.all("/*", (req, res) => {
 });
 
 
+
 app.use((err, req, res, next) => {
 	console.log(err);
 	res.sendStatus(500);

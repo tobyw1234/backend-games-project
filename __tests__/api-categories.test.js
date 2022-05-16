@@ -14,9 +14,6 @@ afterAll(() => {
 	if (db.end) db.end();
 });
 
-//do beforeaach on onbe line 
-
-
 describe("1. GET /api/categories", () => {
       test("200: GET /api/categories returns an array", () => {
 				return request(app)
@@ -29,14 +26,13 @@ describe("1. GET /api/categories", () => {
                     });
           
       });
-    test("200: returns all of the available treasures", () => {
+    test("200: returns all of the available categories", () => {
 			return request(app)
 				.get("/api/categories")
 				.expect(200)
-				.then((treasures) => {
-					// console.log(treasures.body.categories, "this one is the one that we want")
-					expect(treasures.body.categories).toHaveLength(4);
-					treasures.body.categories.forEach((treasure) => {
+				.then((categories) => {
+					expect(categories.body.categories).toHaveLength(4);
+					categories.body.categories.forEach((category) => {
 						expect.objectContaining({
 							slug: expect.any(String),
 							description: expect.any(String),
