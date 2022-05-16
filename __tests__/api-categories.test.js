@@ -21,7 +21,6 @@ describe("1. GET /api/categories", () => {
             .expect(200)
             .then((res) => {
                 const { body } = res;
-                console.log(body.categories, "body")
                 expect(Array.isArray(body.categories)).toBe(true);
             }).then(() => {
                 return request(app)
