@@ -79,7 +79,7 @@ describe("5. PATCH /api/reviews/:review_id tests", () => {
 					expect(res.text).toBe("invalid update");
 				});
 	});
-	 test.only("400: should respond with invalid update when given inc_votes object that contains not a number", () => {
+	 test.only("400: should respond with invalid update when given inc_votes object that contains the wrong key", () => {
 			const inc_votes = { Margaret_thatcher: 4 };
 			return request(app)
 				.patch("/api/reviews/4")
