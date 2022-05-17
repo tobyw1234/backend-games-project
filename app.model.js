@@ -13,7 +13,7 @@ exports.fetchCategories = () => {
 
 
 
-	exports.fetchReviewById = (review_id = 1) => {
+exports.fetchReviewById = (review_id = 1) => {
 	const isReview_idANum = parseInt(review_id);
 	if (!isReview_idANum) {
 		return Promise.reject({ status: 400, msg: "invalid id" });
@@ -21,11 +21,16 @@ exports.fetchCategories = () => {
 	const reviews = db.query(`SELECT * FROM reviews WHERE review_id = $1`, [
 		review_id,
 	]);
-	return Promise.all([reviews, review_id]).then(([reviews, review_id]) => {
+	const commentCount = db.query(`SELECT * FROM comments WHERE review_id = $1`, [review_id]
+	)
+	return Promise.all([reviews, commentCount]).then(([reviews, commentCount]) => {
 		if (!reviews.rows.length) {
 			return Promise.reject({ status: 404, msg: "director not found" });
 		}
-		const reply = reviews.rows[0]
+	
+		let reply = reviews.rows[0]
+		reply.comment_count = commentCount.rows.length;
+		
 		
 		return reply;
 	});

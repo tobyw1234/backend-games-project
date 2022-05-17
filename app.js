@@ -1,12 +1,14 @@
 const express = require("express");
 const app = express();
 const { getCategories, getReviewById } = require("./app.controller.js");
-const {patchVotesByReviewId} = require("./controllers/patch.controller")
+const { patchVotesByReviewId } = require("./controllers/patch.controller")
+const {getAllUsers} = require("./controllers/get.controller")
     
 app.use(express.json());
 
 app.get("/api/categories", getCategories);
 app.get("/api/reviews/:review_id", getReviewById);
+app.get("/api/users", getAllUsers);
 
 app.patch("/api/reviews/:review_id", patchVotesByReviewId);
 
