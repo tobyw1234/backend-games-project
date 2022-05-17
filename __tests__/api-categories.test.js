@@ -39,7 +39,7 @@ describe("1. GET /api/categories", () => {
     })
 
        test('should 404 if invalid endpoint', () => {
-           return request(app).get("/api/fakenews").expect(404);
+           return request(app).get("/api/fakenews").expect(404)
        });
     
     
@@ -78,16 +78,28 @@ const response =  {
     votes: 7
   }
 
-expect(body.reviews).toEqual(response)
+
 })
 })
     test('404: should respond with 404 when passed a valid number with no review at that ID ', () => {
-       return request(app).get("/api/reviews/1006").expect(404);
+        return request(app)
+					.get("/api/reviews/1006")
+					.expect(404)
+            .then((res) => {
+                        expect(res.text).toBe("director not found");
+                    })
+        })
+    
         
     });
     test('400: should respond with error 400 if passed something not a number as ID', () => {
-        return request(app).get("/api/reviews/five").expect(400);
+        return request(app)
+					.get("/api/reviews/five")
+					.expect(400)
+					.then((res) => {
+						expect(res.text).toBe("invalid id");
+					});
     });
   ;
-})
+
 
