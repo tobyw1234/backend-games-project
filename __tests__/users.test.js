@@ -20,8 +20,8 @@ describe('Get all users tests', () => {
 			.expect(200)
 			.then((res) => {
 				const users = res.body.users;
-				expect(Array.isArray(users)).toBe(true)
-				expect(users).toHaveLength(4)
+				expect(Array.isArray(users)).toBe(true);
+				expect(users).toHaveLength(4);
 				users.forEach((user) => {
 					expect(user).toEqual(
 					expect.objectContaining({
