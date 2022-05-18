@@ -106,7 +106,7 @@ describe("5. PATCH /api/reviews/:review_id tests", () => {
 				expect(body.review.votes).toBe(3);
 			});
 	});
-	test("404: should respond with invalid review ", () => {
+	test("404: should respond with invalid review when passed valid formatgit  endpoint which is not a review_id", () => {
 		const inc_votes = { inc_votes: 3 };
 		return request(app)
 			.patch("/api/reviews/1006")
@@ -149,29 +149,31 @@ describe("5. PATCH /api/reviews/:review_id tests", () => {
 });
 
 
-describe.skip("GET /api/reviews tests", () => {
+describe("GET /api/reviews tests", () => {
     test("200: should return an array of reviews objects with the correct format sorted in descending order", () => {
 			return request(app)
 				.get("/api/reviews")
 				.expect(200)
 				.then((res) => {
                     const reviews = res.body.reviews;
-                    expect(reviews).toBeSorted({descending:true});
+                    expect(reviews).toBeSortedBy("created_at", {descending:true});
 					expect(Array.isArray(reviews)).toBe(true);
 					expect(reviews).toHaveLength(13);
 					reviews.forEach((review) => {
-						expect(review).toEqual(
-							expect.objectContaining({
-                                owner: expect.any(String),
-                                title: expect.any(String),
-                                review_id: expect.any(Number),
-                                category: expect.any(String),
-                                created_at: expect.any(String),
-                                votes: expect.any(Number),
-                                comment_count: expect.any(Number)
-							})
-						);
+						expect(review).toEqual(expect.objectContaining({
+							owner: expect.any(String),
+							title: expect.any(String),
+							review_id: expect.any(Number),
+							category: expect.any(String),
+							created_at: expect.any(String),
+							votes: expect.any(Number),
+							comment_count: expect.any(Number),
+							
+						})
+						)
+						
 					});
 				});
-		});
+	});
+	
 });
