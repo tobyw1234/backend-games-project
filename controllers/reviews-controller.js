@@ -9,7 +9,7 @@ const {
 
 exports.getReviewById = (req, res, next) => {
 	const review_id = req.params.review_id;
-	fetchReviewById(review_id);
+	fetchReviewById(review_id)
 		.then((reviews) => {
 			res.status(200).send({ reviews });
 		})
