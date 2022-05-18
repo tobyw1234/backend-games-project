@@ -62,7 +62,6 @@ exports.fetchAllReviews = () => {
             ORDER BY created_at DESC`
 		)
         .then((reviews) => {
-            console.log(reviews.rows)
 			return reviews.rows;
 		});
 };
