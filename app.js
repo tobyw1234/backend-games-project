@@ -7,13 +7,14 @@ const {
 	patchVotesByReviewId,
 	getAllReviews,
 } = require("./controllers/reviews-controller");
-    
+const { getCommentsByReviewId } = require("./controllers/comments-controller");
 app.use(express.json());
 
 app.get("/api/categories", getCategories);
 app.get("/api/reviews/:review_id", getReviewById);
 app.get("/api/users", getAllUsers);
 app.get("/api/reviews", getAllReviews);
+app.get("/api/reviews/:review_id/comments", getCommentsByReviewId);
 app.patch("/api/reviews/:review_id", patchVotesByReviewId);
 
 

@@ -61,8 +61,8 @@ exports.fetchAllReviews = () => {
             GROUP BY reviews.review_id
             ORDER BY created_at DESC`
 		)
-        .then((reviews) => {
-            console.log(reviews.rows)
+		.then((reviews) => {
+			console.log(reviews.rows)
 			return reviews.rows;
 		});
 };
