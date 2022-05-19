@@ -75,8 +75,8 @@ describe("9. GET /api/reviews/:review_id/comments tests", () => {
 describe.only("POST /api/reviews/:review_id/comments tests", () => {
   test('200: should take an object with username and body keys and post them as a comment on the review id given', () => {
     const newComment = {
-      username: "Tobyisgreat",
-      body: "5/10 would rather be in bed"
+      username: "mallionaire",
+      body: "5/10 would rather be in bed",
     };
     return request(app)
       .post("/api/reviews/1/comments")
@@ -94,6 +94,30 @@ describe.only("POST /api/reviews/:review_id/comments tests", () => {
           review_id: expect.any(Number),
      
         });
+      });
+  });
+  test('400: should return invalid input if request object does not contain both mandatory keys ', () => {
+    const reqObj = { inc_votes: "abfe", body: "bacon" };
+		return request(app)
+      .post("/api/reviews/1/comments")
+      .send(reqObj)
+      .expect(400)
+      .then((res) => {
+        expect(res.text).toBe("invalid update");
+      });
+  });
+  test("404: should return if user not in DB tries to post ", () => {
+    const reqObj = {
+      username: "mallonaire",
+      body: "5/10 would rather be in bed",
+    };
+    return request(app)
+      .post("/api/reviews/1/comments")
+      .send(reqObj)
+      .expect(404)
+      .then((res) => {
+        console.log(res.text)
+        expect(res.text).toBe("Route not found");
       });
   });
 });

@@ -25,14 +25,20 @@ exports.fetchCommentsbyReviewId = (review_id = 1) => {
 
 
 exports.insertComment = (review_id, commentObj) => {
+    console.log(commentObj)
     const { username, body } = commentObj
-       const created_at = Date.now(1)
-    const votes = 0
-   console.log("model before sql", username,body,review_id, created_at, votes)
-    return db.query(`INSERT INTO comments (review_id, author, body, votes, created_at) VALUES ($1, $2, $3, $3, $5) RETURNING *;`, [review_id, username, body, votes, created_at])
+
+    if (!username|| !body) {
+      console.log("Sdsds");
+      return Promise.reject({
+        status: 400,
+        msg: "invalid update",
+      });
+    }
+       
+    return db.query(`INSERT INTO comments (review_id, author, body) VALUES ($1, $2, $3) RETURNING *;`, [review_id, username, body, ])
         .then((comment) => {
-            console.log("model after sql")
-            console.log(comment.rows)
+           
             return comment.rows
         })
 }

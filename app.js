@@ -22,10 +22,11 @@ app.post("/api/reviews/:review_id/comments", postComment);
 
 
 app.all("/*", (req, res) => {
-	res.status(404).send({ msg: "Route not found" });
+	res.status(404).send("Route not found" );
 });
 app.use((err, req, res, next) => {
 	if (err.status === 404 || 400) {
+		console.log(err.msg)
 		res.status(err.status).send(err.msg)
 	}
 });
