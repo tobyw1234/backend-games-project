@@ -15,8 +15,8 @@ exports.fetchCommentsbyReviewId = (review_id = 1) => {
         .then((comments) => {
             if (!comments.rows.length) {
                 return Promise.reject({
-                    status: 200,
-                    msg: "This review has no comments",
+                  status: 200,
+                  msg: "This review has no comments",
                 });
             };
             return comments.rows;
@@ -25,31 +25,20 @@ exports.fetchCommentsbyReviewId = (review_id = 1) => {
 
 
 exports.insertComment = (review_id, commentObj) => {
-    console.log(commentObj)
+   
     const { username, body } = commentObj
 
-    if (!username|| !body) {
-      return Promise.reject({
-        status: 400,
-        msg: "invalid update",
-      });
+    if (!username || !body) {
+        return Promise.reject({
+            status: 400,
+            msg: "invalid update",
+        });
     }
-    const checkAuthorExists = db.query(
-      `SELECT * FROM users WHERE username= $1`,
-      [username]);  
+ 
     
-    const addComment = db.query(`INSERT INTO comments (review_id, author, body) VALUES ($1, $2, $3) RETURNING *;`, [review_id, username, body,]);
-
-    return Promise.all([checkAuthorExists, addComment]).then(
-        ([checkAuthorExists, addComment]) => {
-            console.log(checkAuthorExists.rows.length, "rows")
-        if (!checkAuthorExists.rows.length) {
-          return Promise.reject({
-            status: 404,
-            msg: "review not found",
-          });
-        }
-        return addComment.rows;
-      }
-    );
+    return db.query(`INSERT INTO comments (review_id, author, body) VALUES ($1, $2, $3) RETURNING *;`, [review_id, username, body,])
+        .then(({rows}) => {
+            return rows[0]
+        })
+  
 }

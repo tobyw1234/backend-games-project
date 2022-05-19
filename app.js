@@ -24,12 +24,25 @@ app.post("/api/reviews/:review_id/comments", postComment);
 app.all("/*", (req, res) => {
 	res.status(404).send("Route not found" );
 });
+
 app.use((err, req, res, next) => {
-	if (err.status === 404 || 400) {
-		console.log(err.msg)
-		res.status(err.status).send(err.msg)
-	}
-});
+  if (err.code === "23503") {
+    console.log(err);
+    res.status(404).send({msg:"invalid user"});
+  } else {next(err);}
+})
+
+app
+	.use((err, req, res, next) => {
+			console.log(err.status)
+    if (err.status === 404 || 400) {
+					res.status(err.status).send({ msg: err.msg });
+    } else {
+      next(err);
+    }
+  })
+  
+
 
 
 app.use((err, req, res, next) => {

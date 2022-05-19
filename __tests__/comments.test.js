@@ -42,7 +42,7 @@ describe("9. GET /api/reviews/:review_id/comments tests", () => {
             .expect(200)
             .then((res) => {
              
-              expect(res.text).toBe("This review has no comments");
+              expect(res.body.msg).toBe("This review has no comments");
 
             })
           
@@ -57,7 +57,7 @@ describe("9. GET /api/reviews/:review_id/comments tests", () => {
             .get("/api/reviews/beans/comments")
             .expect(400)
             .then((res) => {
-              expect(res.text).toBe("invalid id");
+              expect(res.body.msg).toBe("invalid id");
             });
         });
      
@@ -66,13 +66,13 @@ describe("9. GET /api/reviews/:review_id/comments tests", () => {
             .get("/api/reviews/1006/comments")
             .expect(404)
             .then((res) => {
-              expect(res.text).toBe("This review has no comments");
+              expect(res.body.msg).toBe("review does not exist");
             });
         });
 });
       
 
-describe.only("POST /api/reviews/:review_id/comments tests", () => {
+describe("POST /api/reviews/:review_id/comments tests", () => {
   test('200: should take an object with username and body keys and post them as a comment on the review id given', () => {
     const newComment = {
       username: "mallionaire",
@@ -103,7 +103,7 @@ describe.only("POST /api/reviews/:review_id/comments tests", () => {
       .send(reqObj)
       .expect(400)
       .then((res) => {
-        expect(res.text).toBe("invalid update");
+        expect(res.body.msg).toBe("invalid update");
       });
   });
   test("404: should return if user not in DB tries to post ", () => {
@@ -116,9 +116,26 @@ describe.only("POST /api/reviews/:review_id/comments tests", () => {
       .send(reqObj)
       .expect(404)
       .then((res) => {
-        console.log(res.text)
-        expect(res.text).toBe("Route not found");
+       
+        expect(res.body.msg).toBe("invalid user");
       });
+  });
+  test('404: review id not found ', () => {
+      const reqObj = {
+        username: "mallionaire",
+        body: "5/10 would rather be in bed",
+      };
+    return request(app)
+      .post("/api/reviews/500/comments")
+      .send(reqObj)
+      .expect(404)
+           .then((res) => {
+       ;
+        expect(res.body.msg).toBe("review does not exist");
+      });
+    
+    
+    
   });
 });
 
