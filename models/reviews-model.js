@@ -61,7 +61,7 @@ exports.fetchAllReviews = () => {
             GROUP BY reviews.review_id
             ORDER BY created_at DESC`
 		)
-		.then((reviews) => {
+        .then((reviews) => {
 			return reviews.rows;
 		});
 };
