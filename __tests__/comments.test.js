@@ -13,7 +13,7 @@ afterAll(() => {
 	if (db.end) db.end();
 });
 
-describe("9. GET /api/reviews/:review_id/comments tests", () => {
+describe.only("9. GET /api/reviews/:review_id/comments tests", () => {
     test("200: should return an array of reviews objects with the correct format sorted in descending order", () => {
         return request(app)
           .get("/api/reviews/3/comments")
@@ -36,7 +36,7 @@ describe("9. GET /api/reviews/:review_id/comments tests", () => {
             });
           });
     })
-        test.only('200: should return empty array with passed a valid review_id that finds a review but it has no comments', () => {
+        test('200: should return empty array with passed a valid review_id that finds a review but it has no comments', () => {
           return request(app)
             .get("/api/reviews/1/comments")
             .expect(200)

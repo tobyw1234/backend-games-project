@@ -11,14 +11,37 @@ exports.fetchCommentsbyReviewId = (review_id = 1) => {
     if (!isReview_idANum) {
         return Promise.reject({ status: 400, msg: "invalid id" });
     }
-    return db.query(`SELECT * FROM comments WHERE review_id = $1`, [review_id])
-        .then((comments) => {
-            if (!comments.rows.length) {
-                return Promise.reject({
-                    status: 200,
-                    msg: "This review has no comments",
-                });
-            };
-            return comments.rows;
-        });
+    const selectComments = db.query(`SELECT * FROM comments WHERE review_id = $1`, [review_id])
+    const checkReviewExists = db
+        .query(`SELECT * FROM REVIEWS where review_id = $1`, [review_id])
+        
+    return Promise.all([selectComments, checkReviewExists])
+        .then(([selectComments, checkReviewExists]) => {
+            console.log(checkReviewExists.rows, "selectreview");
+            console.log(selectComments.rows, "SELECTCO")
+        if (!checkReviewExists.rows.length) {
+          return Promise.reject({
+            status: 404,
+            msg: "invlaid review",
+          });
+        }
+            if (!selectComments.rows) {
+            return Promise.reject({
+            status: 404,
+                msg: "invlaid review",
+            
+        }
+      })
+    //     .then(([selectComments]) => {
+    //         console.log("avceva")
+    //               console.log(selectComments.rows, "selectcomments");
+    //     if (!selectComments.rows.length) {
+    //       return Promise.reject({
+    //         status: 200,
+    //         msg: "This review has no comments",
+    //       });
+    //     }
+    //       console.log(selectComments.rows, "sdsad")
+    //     return selectComments.rows;
+    //   });
 };
