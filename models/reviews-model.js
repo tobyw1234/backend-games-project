@@ -54,9 +54,16 @@ exports.fetchReviewById = (review_id = 1) => {
 
 exports.fetchAllReviews = () => {
 	return db
-		.query(`SELECT * FROM reviews ORDER BY created_at DESC`)
-		.then((reviews) => {
-			console.log(reviews.rows);
+		.query(
+			`SELECT reviews.created_at, reviews.title, reviews.category, reviews.review_id, 
+            reviews.owner, reviews.votes, COUNT(comments.author)::INT AS comment_count  
+            FROM reviews LEFT JOIN comments ON reviews.review_id = comments.review_id
+            GROUP BY reviews.review_id
+            ORDER BY created_at DESC`
+		)
+        .then((reviews) => {
 			return reviews.rows;
 		});
 };
+
+
