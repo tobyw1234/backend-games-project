@@ -66,7 +66,7 @@ describe.only("9. GET /api/reviews/:review_id/comments tests", () => {
             .get("/api/reviews/1006/comments")
             .expect(404)
             .then((res) => {
-              expect(res.text).toBe("This review has no comments");
+              expect(res.text).toBe("review not found");
             });
         });
       });

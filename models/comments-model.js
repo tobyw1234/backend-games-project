@@ -17,31 +17,20 @@ exports.fetchCommentsbyReviewId = (review_id = 1) => {
         
     return Promise.all([selectComments, checkReviewExists])
         .then(([selectComments, checkReviewExists]) => {
-            console.log(checkReviewExists.rows, "selectreview");
-            console.log(selectComments.rows, "SELECTCO")
-        if (!checkReviewExists.rows.length) {
-          return Promise.reject({
-            status: 404,
-            msg: "invlaid review",
-          });
-        }
-            if (!selectComments.rows) {
-            return Promise.reject({
-            status: 404,
-                msg: "invlaid review",
-            
-        }
-      })
-    //     .then(([selectComments]) => {
-    //         console.log("avceva")
-    //               console.log(selectComments.rows, "selectcomments");
-    //     if (!selectComments.rows.length) {
-    //       return Promise.reject({
-    //         status: 200,
-    //         msg: "This review has no comments",
-    //       });
-    //     }
-    //       console.log(selectComments.rows, "sdsad")
-    //     return selectComments.rows;
-    //   });
-};
+                       if (!checkReviewExists.rows.length) {
+                return Promise.reject({
+                    status: 404,
+                    msg: "review not found",
+                });
+            }
+            if (!selectComments.rows.length) {
+                return Promise.reject({
+                    status: 200,
+                    msg: "This review has no comments",
+                
+                })
+            }
+            return selectComments.rows;
+           
+        });
+}
