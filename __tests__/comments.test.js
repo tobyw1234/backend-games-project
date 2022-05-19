@@ -108,7 +108,7 @@ describe.only("POST /api/reviews/:review_id/comments tests", () => {
   });
   test("404: should return if user not in DB tries to post ", () => {
     const reqObj = {
-      username: "mallonaire",
+      username: "toby",
       body: "5/10 would rather be in bed",
     };
     return request(app)

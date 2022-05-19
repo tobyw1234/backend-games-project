@@ -29,16 +29,27 @@ exports.insertComment = (review_id, commentObj) => {
     const { username, body } = commentObj
 
     if (!username|| !body) {
-      console.log("Sdsds");
       return Promise.reject({
         status: 400,
         msg: "invalid update",
       });
     }
-       
-    return db.query(`INSERT INTO comments (review_id, author, body) VALUES ($1, $2, $3) RETURNING *;`, [review_id, username, body, ])
-        .then((comment) => {
-           
-            return comment.rows
-        })
+    const checkAuthorExists = db.query(
+      `SELECT * FROM users WHERE username= $1`,
+      [username]);  
+    
+    const addComment = db.query(`INSERT INTO comments (review_id, author, body) VALUES ($1, $2, $3) RETURNING *;`, [review_id, username, body,]);
+
+    return Promise.all([checkAuthorExists, addComment]).then(
+        ([checkAuthorExists, addComment]) => {
+            console.log(checkAuthorExists.rows.length, "rows")
+        if (!checkAuthorExists.rows.length) {
+          return Promise.reject({
+            status: 404,
+            msg: "review not found",
+          });
+        }
+        return addComment.rows;
+      }
+    );
 }
