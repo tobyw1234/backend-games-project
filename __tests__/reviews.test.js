@@ -161,7 +161,6 @@ describe("GET /api/reviews tests", () => {
 					expect(reviews).toHaveLength(13);
 					reviews.forEach((review) => {
 						expect(review).toEqual(expect.objectContaining({
-							owner: expect.any(String),
 							title: expect.any(String),
 							review_id: expect.any(Number),
 							category: expect.any(String),
