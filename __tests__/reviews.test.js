@@ -106,7 +106,7 @@ describe("5. PATCH /api/reviews/:review_id tests", () => {
 				expect(body.review.votes).toBe(3);
 			});
 	});
-	test("404: should respond with invalid review when passed valid formatgit  endpoint which is not a review_id", () => {
+	test("404: should respond with invalid review when passed validly formated endpoint which is not a review_id", () => {
 		const inc_votes = { inc_votes: 3 };
 		return request(app)
 			.patch("/api/reviews/1006")
