@@ -19,7 +19,7 @@ describe.only("9. GET /api/reviews/:review_id/comments tests", () => {
           .get("/api/reviews/3/comments")
           .expect(200)
           .then((res) => {
-            const comments = res.body.comments;
+            const { comments } = res.body
             expect(Array.isArray(comments)).toBe(true);
             expect(comments).toHaveLength(3);
             comments.forEach((comment) => {
