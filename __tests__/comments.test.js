@@ -36,7 +36,7 @@ describe("9. GET /api/reviews/:review_id/comments tests", () => {
             });
           });
     })
-        test.only('200: should return empty array with passed a valid review_id that finds a review but it has no comments', () => {
+        test('200: should return empty array with passed a valid review_id that finds a review but it has no comments', () => {
           return request(app)
             .get("/api/reviews/1/comments")
             .expect(200)
@@ -69,5 +69,32 @@ describe("9. GET /api/reviews/:review_id/comments tests", () => {
               expect(res.text).toBe("This review has no comments");
             });
         });
+});
+      
+
+describe.only("POST /api/reviews/:review_id/comments tests", () => {
+  test('200: should take an object with username and body keys and post them as a comment on the review id given', () => {
+    const newComment = {
+      username: "Tobyisgreat",
+      body: "5/10 would rather be in bed"
+    };
+    return request(app)
+      .post("/api/reviews/1/comments")
+      .send(newComment)
+      .expect(201)
+      .then((res) => {
+        const { body } = res;
+        expect(typeof body.comment).toBe("object");
+        expect.objectContaining({
+          comment_id: expect.any(Number),
+          author: expect.any(String),
+          votes: expect.any(Number),
+          owner: expect.any(String),
+          created_at: expect.any(String),
+          review_id: expect.any(Number),
+     
+        });
       });
+  });
+});
 

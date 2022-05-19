@@ -7,7 +7,7 @@ const {
 	patchVotesByReviewId,
 	getAllReviews,
 } = require("./controllers/reviews-controller");
-const { getCommentsByReviewId } = require("./controllers/comments-controller");
+const { getCommentsByReviewId, postComment } = require("./controllers/comments-controller");
 app.use(express.json());
 
 app.get("/api/categories", getCategories);
@@ -16,6 +16,7 @@ app.get("/api/users", getAllUsers);
 app.get("/api/reviews", getAllReviews);
 app.get("/api/reviews/:review_id/comments", getCommentsByReviewId);
 app.patch("/api/reviews/:review_id", patchVotesByReviewId);
+app.post("/api/reviews/:review_id/comments", postComment);
 
 
 
@@ -29,8 +30,10 @@ app.use((err, req, res, next) => {
 	}
 });
 
+
 app.use((err, req, res, next) => {
 	console.log(err);
+
 	res.sendStatus(500);
 });
 

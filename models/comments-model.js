@@ -22,3 +22,17 @@ exports.fetchCommentsbyReviewId = (review_id = 1) => {
             return comments.rows;
         });
 };
+
+
+exports.insertComment = (review_id, commentObj) => {
+    const { username, body } = commentObj
+       const created_at = Date.now(1)
+    const votes = 0
+   console.log("model before sql", username,body,review_id, created_at, votes)
+    return db.query(`INSERT INTO comments (review_id, author, body, votes, created_at) VALUES ($1, $2, $3, $3, $5) RETURNING *;`, [review_id, username, body, votes, created_at])
+        .then((comment) => {
+            console.log("model after sql")
+            console.log(comment.rows)
+            return comment.rows
+        })
+}
