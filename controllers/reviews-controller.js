@@ -46,10 +46,7 @@ exports.getAllReviews = (req, res, next) => {
 		.then((reviews) => {
 	
 			if (!reviews.length) {
-				
-				res
-          .status(200)
-          .send({ reviews, msg: "there are no reviews for this category" });
+				res.status(200).send({ reviews });
 
 			} else {
 				res.status(200).send({ reviews });

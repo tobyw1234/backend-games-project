@@ -228,7 +228,7 @@ describe('/api/review queries tests', () => {
       .expect(200)
 					.then((res) => {
 							console.log(res)
-        expect(res.body.msg).toBe("there are no reviews for this category");
+        expect(res.body.reviews).toEqual([]);
       });
   });
 })
