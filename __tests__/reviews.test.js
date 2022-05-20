@@ -44,7 +44,9 @@ describe("4 get api/reviews/:reviewid", () => {
 			.get("/api/reviews/1006")
 			.expect(404)
 			.then((res) => {
+
 				expect(res.body.msg).toBe("review does not exist");
+
 			});
 	});
 
@@ -150,29 +152,83 @@ describe("5. PATCH /api/reviews/:review_id tests", () => {
 
 
 describe("GET /api/reviews tests", () => {
-    test("200: should return an array of reviews objects with the correct format sorted in descending order", () => {
-			return request(app)
-				.get("/api/reviews")
-				.expect(200)
-				.then((res) => {
-                    const reviews = res.body.reviews;
-                    expect(reviews).toBeSortedBy("created_at", {descending:true});
-					expect(Array.isArray(reviews)).toBe(true);
-					expect(reviews).toHaveLength(13);
-					reviews.forEach((review) => {
-						expect(review).toEqual(expect.objectContaining({
-							title: expect.any(String),
-							review_id: expect.any(Number),
-							category: expect.any(String),
-							created_at: expect.any(String),
-							votes: expect.any(Number),
-							comment_count: expect.any(Number),
+	test("200: should return an array of reviews objects with the correct format sorted in descending order", () => {
+		return request(app)
+			.get("/api/reviews")
+			.expect(200)
+			.then((res) => {
+				const reviews = res.body.reviews;
+				expect(reviews).toBeSortedBy("created_at", { descending: true });
+				expect(Array.isArray(reviews)).toBe(true);
+				expect(reviews).toHaveLength(13);
+				reviews.forEach((review) => {
+					expect(review).toEqual(expect.objectContaining({
+						title: expect.any(String),
+						review_id: expect.any(Number),
+						category: expect.any(String),
+						created_at: expect.any(String),
+						votes: expect.any(Number),
+						comment_count: expect.any(Number),
 							
-						})
-						)
+					})
+					)
 						
-					});
 				});
+			});
 	});
-	
-});
+})
+describe('/api/review queries tests', () => {
+	test('should accept order query which sorts in either ascending or descending depending on query ', () => {
+		return request(app)
+			.get("/api/reviews?order=asc")
+			.expect(200)
+			.then((res) => {
+				const reviews = res.body.reviews;
+				expect(reviews).toBeSortedBy("created_at", { ascending: true });
+
+			});
+	});
+	test('should accept cateogry query which filters results by that category ', () => {
+		return request(app)
+			.get("/api/reviews?category=euro_game")
+			.expect(200)
+			.then((res) => {
+				const reviews = res.body.reviews;
+				expect(reviews).toBeSortedBy("created_at", { descending: true });
+
+			});
+	})
+	test('400: should respond with invalid order if given an invalid order query', () => {
+		return request(app)
+      .get("/api/reviews?order=big")
+      .expect(400)
+      .then((res) => {
+        expect(res.body.msg).toBe("invalid order");
+      });
+	})
+		test("400: should respond with invalid sort if given an invalid sort_by query", () => {
+      return request(app)
+        .get("/api/reviews?sort_by=big")
+        .expect(400)
+        .then((res) => {
+          expect(res.body.msg).toBe("invalid sort");
+        });
+		});
+	test("404: should respond with invalid category if given a category query not in DB", () => {
+    return request(app)
+      .get("/api/reviews?category=big")
+      .expect(404)
+      .then((res) => {
+        expect(res.body.msg).toBe("invalid category");
+      });
+	});
+	test("200: should return empty array if the category is in dB but has no comments", () => {
+    return request(app)
+      .get("/api/reviews?category=children's_games")
+      .expect(200)
+					.then((res) => {
+							console.log(res)
+        expect(res.body.reviews).toEqual([]);
+      });
+  });
+})
