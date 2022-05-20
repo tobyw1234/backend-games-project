@@ -13,7 +13,7 @@ afterAll(() => {
 	if (db.end) db.end();
 });
 
-describe.only("9. GET /api/reviews/:review_id/comments tests", () => {
+describe("9. GET /api/reviews/:review_id/comments tests", () => {
     test("200: should return an array of reviews objects with the correct format sorted in descending order", () => {
         return request(app)
           .get("/api/reviews/3/comments")
@@ -29,7 +29,7 @@ describe.only("9. GET /api/reviews/:review_id/comments tests", () => {
                   body: expect.any(String),
                  comment_id: expect.any(Number),
                     created_at: expect.any(String),
-                    review_id: expect.any(Number),
+                    review_id: 3,
                   votes: expect.any(Number)
                 })
               );
@@ -42,7 +42,7 @@ describe.only("9. GET /api/reviews/:review_id/comments tests", () => {
             .expect(200)
             .then((res) => {
              
-              expect(res.text).toBe("This review has no comments");
+              expect(res.body.msg).toBe("This review has no comments");
 
             })
           
@@ -57,7 +57,7 @@ describe.only("9. GET /api/reviews/:review_id/comments tests", () => {
             .get("/api/reviews/beans/comments")
             .expect(400)
             .then((res) => {
-              expect(res.text).toBe("invalid id");
+              expect(res.body.msg).toBe("invalid id");
             });
         });
      
@@ -66,8 +66,88 @@ describe.only("9. GET /api/reviews/:review_id/comments tests", () => {
             .get("/api/reviews/1006/comments")
             .expect(404)
             .then((res) => {
-              expect(res.text).toBe("review not found");
+              expect(res.body.msg).toBe("review does not exist");
+
             });
         });
+});
+      
+
+describe("POST /api/reviews/:review_id/comments tests", () => {
+  test('200: should take an object with username and body keys and post them as a comment on the review id given', () => {
+    const newComment = {
+      username: "mallionaire",
+      body: "5/10 would rather be in bed",
+    };
+    return request(app)
+      .post("/api/reviews/1/comments")
+      .send(newComment)
+      .expect(201)
+      .then((res) => {
+        const { body } = res;
+        expect(typeof body.comment).toBe("object");
+        expect.objectContaining({
+          comment_id: expect.any(Number),
+          author: expect.any(String),
+          votes: expect.any(Number),
+          owner: expect.any(String),
+          created_at: expect.any(String),
+          review_id: 1,
+     
+        });
       });
+  });
+  test('400: should return invalid input if request object does not contain both mandatory keys ', () => {
+    const reqObj = { inc_votes: "abfe", body: "bacon" };
+		return request(app)
+      .post("/api/reviews/1/comments")
+      .send(reqObj)
+      .expect(400)
+      .then((res) => {
+        expect(res.body.msg).toBe("invalid update");
+      });
+  });
+  test("404: should return if user not in DB tries to post ", () => {
+    const reqObj = {
+      username: "toby",
+      body: "5/10 would rather be in bed",
+    };
+    return request(app)
+      .post("/api/reviews/1/comments")
+      .send(reqObj)
+      .expect(404)
+      .then((res) => {
+       
+        expect(res.body.msg).toBe("invalid user");
+      });
+  });
+  test('404: review id not found when passed review _id not in DB but corrrect format', () => {
+      const reqObj = {
+        username: "mallionaire",
+        body: "5/10 would rather be in bed",
+      };
+    return request(app)
+      .post("/api/reviews/500/comments")
+      .send(reqObj)
+      .expect(404)
+           .then((res) => {
+       ;
+        expect(res.body.msg).toBe("review does not exist");
+      });
+        
+  });
+  test("400: review id not found if passsed invalid review id format", () => {
+      const reqObj = {
+        username: "mallionaire",
+        body: "5/10 would rather be in bed",
+      };
+      return request(app)
+        .post("/api/reviews/bananna/comments")
+        .send(reqObj)
+        .expect(400)
+        .then((res) => {
+          expect(res.body.msg).toBe("invalid id");
+        });
+    });
+});
 

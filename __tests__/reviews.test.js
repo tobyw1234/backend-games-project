@@ -44,7 +44,9 @@ describe("4 get api/reviews/:reviewid", () => {
 			.get("/api/reviews/1006")
 			.expect(404)
 			.then((res) => {
-				expect(res.body.msg).toBe("director not found");
+
+				expect(res.body.msg).toBe("review does not exist");
+
 			});
 	});
 

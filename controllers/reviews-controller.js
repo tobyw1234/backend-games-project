@@ -2,6 +2,7 @@ const {
 	fetchReviewById,
 	fetchAllReviews,
 	updateVotesByReviewID,
+	checkReviewExists
 } = require("../models/reviews-model");
 
 
@@ -9,8 +10,17 @@ const {
 
 exports.getReviewById = (req, res, next) => {
 	const review_id = req.params.review_id;
-	fetchReviewById(review_id)
+	const isReview_idANum = parseInt(review_id);
+	if (!isReview_idANum) {
+		res.status(400).send({ msg: "invalid id"});
+	}
+	
+	checkReviewExists(review_id)
+		.then(() => {
+			return fetchReviewById(review_id)
+		})
 		.then((reviews) => {
+
 			res.status(200).send({ reviews });
 		})
 		.catch((err) => {
