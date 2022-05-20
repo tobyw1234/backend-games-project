@@ -44,7 +44,7 @@ describe("4 get api/reviews/:reviewid", () => {
 			.get("/api/reviews/1006")
 			.expect(404)
 			.then((res) => {
-				expect(res.text).toBe("director not found");
+				expect(res.body.msg).toBe("director not found");
 			});
 	});
 
@@ -53,7 +53,7 @@ describe("4 get api/reviews/:reviewid", () => {
 			.get("/api/reviews/five")
 			.expect(400)
 			.then((res) => {
-				expect(res.text).toBe("invalid id");
+				expect(res.body.msg).toBe("invalid id");
 			});
 	});
 	test("review response object should include a comment_count key which is the total number of comments with passed review id", () => {
@@ -192,7 +192,7 @@ describe('/api/review queries tests', () => {
 			.expect(200)
 			.then((res) => {
 				const reviews = res.body.reviews;
-				expect(reviews).toBeSortedBy("created_at", { ascending: true });
+				expect(reviews).toBeSortedBy("created_at", { descending: true });
 
 			});
 	})
@@ -201,8 +201,23 @@ describe('/api/review queries tests', () => {
       .get("/api/reviews?order=big")
       .expect(400)
       .then((res) => {
-        const reviews = res.body.reviews;
-        expect(res.body.msg).toBe("invalid id");
+        expect(res.body.msg).toBe("invalid order");
       });
 	})
+		test("400: should respond with invalid sort if given an invalid sort_by query", () => {
+      return request(app)
+        .get("/api/reviews?sort_by=big")
+        .expect(400)
+        .then((res) => {
+          expect(res.body.msg).toBe("invalid sort");
+        });
+		});
+	test("404: should respond with invalid category if given a category query not in DB", () => {
+    return request(app)
+      .get("/api/reviews?category=big")
+      .expect(404)
+      .then((res) => {
+        expect(res.body.msg).toBe("invalid category");
+      });
+  });
 })

@@ -24,8 +24,8 @@ app.all("/*", (req, res) => {
 	res.status(404).send({ msg: "Route not found" });
 });
 app.use((err, req, res, next) => {
-	if (err.status === 404 || 400) {
-		res.status(err.status).send(err.msg)
+  if (err === 404 || 400) {
+		res.status(err.status).send({ msg: err.msg })
 	}
 });
 
