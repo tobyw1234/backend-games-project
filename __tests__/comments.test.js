@@ -151,3 +151,28 @@ describe("POST /api/reviews/:review_id/comments tests", () => {
     });
 });
 
+describe("12. DELETE /api/comments/:comment_id", () => {
+  test('return status 204 if comment sucsessfully deleted', () => {
+    return request(app)
+      .delete("/api/comments/1")
+      .expect(204)
+        
+  });
+   test("400: comment given is not a number", () => {
+     return request(app)
+       .delete("/api/comments/four")
+       .expect(400)
+       .then((res) => {
+         expect(res.body.msg).toBe("invalid id");
+       });
+   });
+    test("404: comment given is not in DB", () => {
+      return request(app)
+        .delete("/api/comments/400")
+        .expect(404)
+        .then((res) => {
+          expect(res.body.msg).toBe("comment does not exist");
+        });
+    });
+});
+

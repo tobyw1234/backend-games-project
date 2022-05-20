@@ -60,3 +60,18 @@ exports.checkCommentExists = (comment_id) => {
       } else return rows;
     });
 };
+
+exports.removeComment = (comment_id) => {
+    console.log("model")
+    return db.query(`DELETE FROM comments WHERE comment_id = $1 RETURNING *`, [comment_id])
+        .then(({ rows }) => {
+            if (!rows.length) {
+                return Promise.reject({
+                  status: 404,
+                  msg: "comment does not exist",
+                });
+            } else {
+                return rows
+            }
+        })
+}

@@ -21,7 +21,7 @@ app.get("/api/reviews", getAllReviews);
 app.get("/api/reviews/:review_id/comments", getCommentsByReviewId);
 app.patch("/api/reviews/:review_id", patchVotesByReviewId);
 app.post("/api/reviews/:review_id/comments", postComment);
-app.delete("DELETE /api/comments/:comment_id", deleteComment)
+app.delete("/api/comments/:comment_id", deleteComment)
 
 
 

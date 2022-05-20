@@ -1,7 +1,8 @@
 const {
   fetchCommentsbyReviewId,
   insertComment,
-  checkCommentExists
+  checkCommentExists,
+  removeComment
 } = require("../models/comments-model");
 const {checkReviewExists} = require("../models/reviews-model")
  
@@ -49,11 +50,20 @@ exports.postComment = (req, res, next) => {
 }
 
 exports.deleteComment = (req, res, next) => {
-    const comment_id = req.params.review_id;
-    const isComment_idANum = parseInt(comment_id);
-    if (!isComment_idANum) {
-      res.status(400).send({ msg: "invalid id" });
-    }
+  const comment_id = req.params.comment_id;
+  console.log(req.params)
+  const isComment_idANum = parseInt(comment_id);
+  if (!isComment_idANum) {
+    res.status(400).send({ msg: "invalid id" })
+  } else {
+        
+    return removeComment(comment_id)
   
+      .then((deleted) => {
+        console.log(deleted)
+        res.status(204).send()
+      }).catch(next)
+  
+  }
 }
 
