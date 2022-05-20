@@ -13,13 +13,13 @@ afterAll(() => {
 	if (db.end) db.end();
 });
 
-describe("9. GET /api/reviews/:review_id/comments tests", () => {
+describe.only("9. GET /api/reviews/:review_id/comments tests", () => {
     test("200: should return an array of reviews objects with the correct format sorted in descending order", () => {
         return request(app)
           .get("/api/reviews/3/comments")
           .expect(200)
           .then((res) => {
-            const comments = res.body.comments;
+            const { comments } = res.body
             expect(Array.isArray(comments)).toBe(true);
             expect(comments).toHaveLength(3);
             comments.forEach((comment) => {
@@ -67,6 +67,7 @@ describe("9. GET /api/reviews/:review_id/comments tests", () => {
             .expect(404)
             .then((res) => {
               expect(res.body.msg).toBe("review does not exist");
+
             });
         });
 });
