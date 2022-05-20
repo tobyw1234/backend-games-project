@@ -33,11 +33,20 @@ exports.patchVotesByReviewId = (req, res, next) => {
 exports.getAllReviews = (req, res, next) => {
 	const { sort_by, order, category } = req.query
 	fetchAllReviews(sort_by, order, category)
-    .then((reviews) => {
-      res.status(200).send({ reviews });
-    })
-    .catch((err) => {
-					next(err)
-					console.log(err)
-    });
-};
+		.then((reviews) => {
+	
+			if (!reviews.length) {
+				
+				res
+          .status(200)
+          .send({ reviews, msg: "there are no reviews for this category" });
+
+			} else {
+				res.status(200).send({ reviews });
+			}
+			})
+		.catch((err) => {
+			next(err)
+	
+		});
+}

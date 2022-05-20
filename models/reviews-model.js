@@ -60,15 +60,11 @@ exports.fetchReviewById = (review_id = 1) => {
 
  const getCategory = () => {
 	return db
-    .query(`SELECT reviews.category FROM reviews GROUP BY reviews.category`)
-    .then(({ rows }) => {
-      const categories = rows.map((row) => {
-        row = row.category;
-        return row;
-      });
-
-      return rows;
-    })
+    .query(`SELECT categories.slug FROM categories GROUP BY categories.slug`)
+		.then(({ rows }) => {
+					return rows;
+					
+    });
 
 	}
 	
@@ -89,12 +85,13 @@ exports.fetchAllReviews = (sort_by = "created_at", order = "desc", category) => 
 	return getCategory()
     .then((rows) => {
       const categoryArr = rows.map((row) => {
-        row = row.category;
+        row = row.slug;
         return row;
 						});
-					
+console.log(categoryArr)
 					if (category) {
 						const categorySpaces = category.replace("_", " ");
+						console.log(categorySpaces)
 												if (!categoryArr.includes(categorySpaces)) {
 							   return Promise.reject({ status: 404, msg: "invalid category" });
 												} 
@@ -114,16 +111,18 @@ exports.fetchAllReviews = (sort_by = "created_at", order = "desc", category) => 
             `;
 
       if (category) {
-        const categorySpaces = category.replace("_", " ");
+        const categorySpaces = category.replace("_", " ").replace("'", "''");
 
         queryStr += ` WHERE reviews.category = '${categorySpaces}' `;
       }
 
-      queryStr += `GROUP BY reviews.review_id ORDER BY created_at ${order}`;
+					queryStr += `GROUP BY reviews.review_id ORDER BY created_at ${order}`;
 
       return db.query(queryStr);
-    })
-    .then((reviews) => {
+						
+				})
+		.then((reviews) => {
+				
       return reviews.rows;
     });
 }; 

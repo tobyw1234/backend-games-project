@@ -219,5 +219,14 @@ describe('/api/review queries tests', () => {
       .then((res) => {
         expect(res.body.msg).toBe("invalid category");
       });
+	});
+	test("200: should return empty array if the category is in dB but has no comments", () => {
+    return request(app)
+      .get("/api/reviews?category=children's_games")
+      .expect(200)
+					.then((res) => {
+							console.log(res)
+        expect(res.body.msg).toBe("there are no reviews for this category");
+      });
   });
 })
