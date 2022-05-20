@@ -1,6 +1,7 @@
 const {
   fetchCommentsbyReviewId,
   insertComment,
+  checkCommentExists
 } = require("../models/comments-model");
 const {checkReviewExists} = require("../models/reviews-model")
  
@@ -45,5 +46,14 @@ exports.postComment = (req, res, next) => {
         next(err);
       });
   }
+}
+
+exports.deleteComment = (req, res, next) => {
+    const comment_id = req.params.review_id;
+    const isComment_idANum = parseInt(comment_id);
+    if (!isComment_idANum) {
+      res.status(400).send({ msg: "invalid id" });
+    }
+  
 }
 
