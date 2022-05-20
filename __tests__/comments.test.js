@@ -29,7 +29,7 @@ describe("9. GET /api/reviews/:review_id/comments tests", () => {
                   body: expect.any(String),
                  comment_id: expect.any(Number),
                     created_at: expect.any(String),
-                    review_id: expect.any(Number),
+                    review_id: 3,
                   votes: expect.any(Number)
                 })
               );
@@ -91,7 +91,7 @@ describe("POST /api/reviews/:review_id/comments tests", () => {
           votes: expect.any(Number),
           owner: expect.any(String),
           created_at: expect.any(String),
-          review_id: expect.any(Number),
+          review_id: 1,
      
         });
       });
@@ -120,7 +120,7 @@ describe("POST /api/reviews/:review_id/comments tests", () => {
         expect(res.body.msg).toBe("invalid user");
       });
   });
-  test('404: review id not found ', () => {
+  test('404: review id not found when passed review _id not in DB but corrrect format', () => {
       const reqObj = {
         username: "mallionaire",
         body: "5/10 would rather be in bed",
@@ -133,9 +133,20 @@ describe("POST /api/reviews/:review_id/comments tests", () => {
        ;
         expect(res.body.msg).toBe("review does not exist");
       });
-    
-    
-    
+        
   });
+    test("404: review id not found if passsed invalid review id format", () => {
+      const reqObj = {
+        username: "mallionaire",
+        body: "5/10 would rather be in bed",
+      };
+      return request(app)
+        .post("/api/reviews/bananna/comments")
+        .send(reqObj)
+        .expect(400)
+        .then((res) => {
+          expect(res.body.msg).toBe("invalid id");
+        });
+    });
 });
 
