@@ -37,21 +37,41 @@ exports.fetchCommentsbyReviewId = (review_id = 1) => {
 
 
 exports.insertComment = (review_id, commentObj) => {
-   
     const { username, body } = commentObj
-
     if (!username || !body) {
         return Promise.reject({
             status: 400,
             msg: "invalid update",
         });
     }
- 
-    
+  
     return db.query(`INSERT INTO comments (review_id, author, body) VALUES ($1, $2, $3) RETURNING *;`, [review_id, username, body,])
         .then(({rows}) => {
             return rows[0]
         })
-  
-}
+  }
 
+exports.checkCommentExists = (comment_id) => {
+  return db
+    .query(`SELECT * FROM comments WHERE comment_id = $1`, [comment_id])
+    .then(({ rows }) => {
+      if (!rows.length) {
+        return Promise.reject({ status: 404, msg: "comment does not exist" });
+      } else return rows;
+    });
+};
+
+exports.removeComment = (comment_id) => {
+    console.log("model")
+    return db.query(`DELETE FROM comments WHERE comment_id = $1 RETURNING *`, [comment_id])
+        .then(({ rows }) => {
+            if (!rows.length) {
+                return Promise.reject({
+                  status: 404,
+                  msg: "comment does not exist",
+                });
+            } else {
+                return rows
+            }
+        })
+}
