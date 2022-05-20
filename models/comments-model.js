@@ -5,6 +5,7 @@ const db = require("../db/connection");
 
 
 exports.fetchCommentsbyReviewId = (review_id = 1) => {
+    
    
     const isReview_idANum = parseInt(review_id);
     
@@ -14,7 +15,6 @@ exports.fetchCommentsbyReviewId = (review_id = 1) => {
     const selectComments = db.query(`SELECT * FROM comments WHERE review_id = $1`, [review_id])
     const checkReviewExists = db
         .query(`SELECT * FROM REVIEWS where review_id = $1`, [review_id])
-        
     return Promise.all([selectComments, checkReviewExists])
         .then(([selectComments, checkReviewExists]) => {
                        if (!checkReviewExists.rows.length) {
@@ -30,7 +30,8 @@ exports.fetchCommentsbyReviewId = (review_id = 1) => {
                   msg: "This review has no comments",
                 });
             };
-            return comments.rows;
+
+            return selectComments.rows;
         });
 };
 

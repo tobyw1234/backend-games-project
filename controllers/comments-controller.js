@@ -14,14 +14,13 @@ exports.getCommentsByReviewId = (req, res, next) => {
   }
   checkReviewExists(review_id)
     .then(() => {
+
       return fetchCommentsbyReviewId(review_id)
     })
     .then((comments) => {
-     
 			res.status(200).send({ comments });
 		})
     .catch((err) => {
-      
       next(err)
     });
 };

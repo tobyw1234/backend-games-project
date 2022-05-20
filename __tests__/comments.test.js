@@ -13,7 +13,7 @@ afterAll(() => {
 	if (db.end) db.end();
 });
 
-describe.only("9. GET /api/reviews/:review_id/comments tests", () => {
+describe("9. GET /api/reviews/:review_id/comments tests", () => {
     test("200: should return an array of reviews objects with the correct format sorted in descending order", () => {
         return request(app)
           .get("/api/reviews/3/comments")
@@ -136,7 +136,7 @@ describe("POST /api/reviews/:review_id/comments tests", () => {
       });
         
   });
-    test("404: review id not found if passsed invalid review id format", () => {
+  test("400: review id not found if passsed invalid review id format", () => {
       const reqObj = {
         username: "mallionaire",
         body: "5/10 would rather be in bed",
