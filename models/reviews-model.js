@@ -52,16 +52,42 @@ exports.fetchReviewById = (review_id = 1) => {
 
 
 
-exports.fetchAllReviews = (sort_by, order, category) => {
-  console.log(order);
-  return db
-    .query(
-      `SELECT reviews.created_at, reviews.title, reviews.category, reviews.review_id, 
+exports.fetchAllReviews = (sort_by = "created_at", order = "desc", category) => {
+	let validSort = ["created_at", "title", "review_id", "owner", "votes", "comment_count"];
+	let validOrder = ["asc", "desc"]
+
+
+	
+	if (!validsort.includes(sort)) {
+		return Promise.reject({ status: 400, msg: "invalid order" });
+	}
+
+
+
+	let queryStr = `SELECT reviews.created_at, reviews.title, reviews.category, reviews.review_id, 
             reviews.owner, reviews.votes, COUNT(comments.author)::INT AS comment_count  
-            FROM reviews LEFT JOIN comments ON reviews.review_id = comments.review_id
-            GROUP BY reviews.review_id
-            ORDER BY created_at $1`, [ order]
-    )
+            FROM reviews  LEFT JOIN comments ON reviews.review_id = comments.review_id
+             GROUP BY reviews.review_id WHERE reviews.category = "euro game"`;
+	console.log(category)
+	
+	
+// 	if (category) {
+// 		const categorySpaces = category.replace("_", " ")
+// console.log(categorySpaces, "replace");
+
+//     queryStr += ` WHERE reviews.category = ${categorySpaces}`;
+//   }
+	
+	
+	console.log(queryStr)
+
+
+	queryStr += ` ORDER BY ${sort_by} ${order}`
+
+
+
+  return db
+    .query(queryStr)
     .then((reviews) => {
       return reviews.rows;
     });

@@ -113,7 +113,7 @@ describe("5. PATCH /api/reviews/:review_id tests", () => {
 			.send(inc_votes)
 			.expect(404)
 			.then((res) => {
-				expect(res.text).toBe("invalid review");
+				expect(res.body.msg).toBe("invalid review");
 			});
 	});
 	test("400: should respond with invalid id when given endpoint thats not a number", () => {
@@ -123,7 +123,7 @@ describe("5. PATCH /api/reviews/:review_id tests", () => {
 			.send(inc_votes)
 			.expect(400)
 			.then((res) => {
-				expect(res.text).toBe("invalid id");
+				expect(res.body.msg).toBe("invalid id");
 			});
 	});
 	test("400: should respond with invalid update when given inc_votes object that contains not a number", () => {
@@ -133,7 +133,7 @@ describe("5. PATCH /api/reviews/:review_id tests", () => {
 			.send(inc_votes)
 			.expect(400)
 			.then((res) => {
-				expect(res.text).toBe("invalid update");
+				expect(res.body.msg).toBe("invalid update");
 			});
 	});
 	test("400: should respond with invalid update when given inc_votes object that contains the wrong key", () => {
@@ -143,7 +143,7 @@ describe("5. PATCH /api/reviews/:review_id tests", () => {
 			.send(inc_votes)
 			.expect(400)
 			.then((res) => {
-				expect(res.text).toBe("invalid update");
+				expect(res.body.msg).toBe("invalid update");
 			});
 	});
 });
@@ -175,16 +175,34 @@ describe("GET /api/reviews tests", () => {
 			});
 	});
 })
-	describe.only('/api/review queries tests', () => {
-		test('should accept order query which sorts in either ascending or descending depending on query ', () => {
-			return request(app)
-				.get("/api/reviews?order=asc")
-				.expect(200)
-				.then((res) => {
-                    const reviews = res.body.reviews;
-                    expect(reviews).toBeSortedBy("created_at", {ascending:true});
+describe('/api/review queries tests', () => {
+	test('should accept order query which sorts in either ascending or descending depending on query ', () => {
+		return request(app)
+			.get("/api/reviews?order=asc")
+			.expect(200)
+			.then((res) => {
+				const reviews = res.body.reviews;
+				expect(reviews).toBeSortedBy("created_at", { ascending: true });
 
-		});
-		
+			});
 	});
+	test('should accept cateogry query which filters results by that category ', () => {
+		return request(app)
+			.get("/api/reviews?category=euro_game")
+			.expect(200)
+			.then((res) => {
+				const reviews = res.body.reviews;
+				expect(reviews).toBeSortedBy("created_at", { ascending: true });
+
+			});
+	})
+	test('400: should respond with invalid order if given an invalid order query', () => {
+		return request(app)
+      .get("/api/reviews?order=big")
+      .expect(400)
+      .then((res) => {
+        const reviews = res.body.reviews;
+        expect(res.body.msg).toBe("invalid id");
+      });
+	})
 })
