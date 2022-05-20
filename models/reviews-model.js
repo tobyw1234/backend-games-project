@@ -6,28 +6,34 @@ const db = require("../db/connection");
 
 exports.fetchReviewById = (review_id = 1) => {
 	const isReview_idANum = parseInt(review_id);
+
 	if (!isReview_idANum) {
 		return Promise.reject({ status: 400, msg: "invalid id" });
+	} else {
+
+		return db
+			.query(
+				`SELECT reviews.*, COUNT(comments.author)::INT AS comment_count  
+            FROM reviews LEFT JOIN comments ON reviews.review_id = comments.review_id
+												WHERE reviews.review_id = $1
+											 GROUP BY reviews.review_id
+            ORDER BY created_at DESC`, [review_id])
+			.then((reviews) => {
+				return reviews.rows[0];
+			});
+		
 	}
-	const reviews = db.query(`SELECT * FROM reviews WHERE review_id = $1`, [
-		review_id,
-	]);
-	const commentCount = db.query(`SELECT * FROM comments WHERE review_id = $1`, [
-		review_id,
-	]);
-	return Promise.all([reviews, commentCount]).then(
-		([reviews, commentCount]) => {
-			if (!reviews.rows.length) {
-				return Promise.reject({ status: 404, msg: "director not found" });
-			}
+}
+	
+	exports.checkReviewExists = (review_id) => {
 
-			let reply = reviews.rows[0];
-			reply.comment_count = commentCount.rows.length;
-
-			return reply;
-		}
-	);
-};
+		return db.query(`SELECT * FROM reviews WHERE review_id = $1`, [review_id])
+			.then(({ rows }) => {
+				if (!rows.length) {
+					return Promise.reject({ status: 404, msg: "review does not exist" });
+				} else return rows
+			})
+	}
 
 	exports.updateVotesByReviewID = (review_id, inc_votes) => {
 		const isReview_idANum = parseInt(review_id);
@@ -48,14 +54,10 @@ exports.fetchReviewById = (review_id = 1) => {
 			if (!updateReview.rows.length) {
 				return Promise.reject({ status: 404, msg: "invalid review" });
 			}
+		
 			return updateReview.rows[0];
 		});
 	};
-
-
-
-
-
 
 
  const getCategory = () => {
@@ -128,5 +130,6 @@ exports.fetchAllReviews = (sort_by = "created_at", order = "desc", category) => 
     });
 }; 
 	
+
 
 
