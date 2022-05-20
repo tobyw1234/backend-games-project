@@ -31,7 +31,9 @@ exports.patchVotesByReviewId = (req, res, next) => {
 
 
 exports.getAllReviews = (req, res, next) => {
-	fetchAllReviews().then((reviews) => {
-		res.status(200).send({ reviews });
-	});
+	const { sort_by, order, category } = req.query
+	console.log(req.query)
+	fetchAllReviews(sort_by, order, category).then((reviews) => {
+    res.status(200).send({ reviews });
+  });
 };
