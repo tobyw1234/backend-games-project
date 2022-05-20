@@ -30,5 +30,30 @@
         }
       ]
     }
+  },
+  "GET /api/reviews/:review_id":{
+    "description": "serves a review object for the review with the review_id given",
+    "queries":[],
+    "exaplmpleResponse":{
+       "category": "social deduction",
+       "comment_count": 0,
+       "created_at": "2021-01-22T11:35:50.936Z",
+       "designer": "Gamey McGameface",
+       "owner": "mallionaire",
+       "review_body": "Consequat velit occaecat voluptate do. Dolor pariatur fugiat sint et proident ex do consequat est. Nisi minim laboris mollit cupidatat et adipisicing laborum do. Sint sit tempor officia pariatur duis ullamco labore ipsum nisi voluptate nulla eu veniam. Et do ad id dolore id cillum non non culpa. Cillum mollit dolor dolore excepteur aliquip. Cillum aliquip quis aute enim anim ex laborum officia. Aliqua magna elit reprehenderit Lorem elit non laboris irure qui aliquip ad proident. Qui enim mollit Lorem labore eiusmod",
+     "review_id": 4,
+       "review_img_url": "https://images.pexels.com/photos/278918/pexels-photo-278918.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260",
+      "title": "Dolor reprehenderit",
+      "votes": 7
+      }
+      
+    }
+
+    
   }
-}
+
+
+
+
+
+

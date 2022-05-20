@@ -44,7 +44,7 @@ describe("4 get api/reviews/:reviewid", () => {
 			.get("/api/reviews/1006")
 			.expect(404)
 			.then((res) => {
-				expect(res.text).toBe("director not found");
+				expect(res.body.msg).toBe("review does not exist");
 			});
 	});
 
@@ -53,7 +53,7 @@ describe("4 get api/reviews/:reviewid", () => {
 			.get("/api/reviews/five")
 			.expect(400)
 			.then((res) => {
-				expect(res.text).toBe("invalid id");
+				expect(res.body.msg).toBe("invalid id");
 			});
 	});
 	test("review response object should include a comment_count key which is the total number of comments with passed review id", () => {
@@ -113,7 +113,7 @@ describe("5. PATCH /api/reviews/:review_id tests", () => {
 			.send(inc_votes)
 			.expect(404)
 			.then((res) => {
-				expect(res.text).toBe("invalid review");
+				expect(res.body.msg).toBe("invalid review");
 			});
 	});
 	test("400: should respond with invalid id when given endpoint thats not a number", () => {
@@ -123,7 +123,7 @@ describe("5. PATCH /api/reviews/:review_id tests", () => {
 			.send(inc_votes)
 			.expect(400)
 			.then((res) => {
-				expect(res.text).toBe("invalid id");
+				expect(res.body.msg).toBe("invalid id");
 			});
 	});
 	test("400: should respond with invalid update when given inc_votes object that contains not a number", () => {
@@ -133,7 +133,7 @@ describe("5. PATCH /api/reviews/:review_id tests", () => {
 			.send(inc_votes)
 			.expect(400)
 			.then((res) => {
-				expect(res.text).toBe("invalid update");
+				expect(res.body.msg).toBe("invalid update");
 			});
 	});
 	test("400: should respond with invalid update when given inc_votes object that contains the wrong key", () => {
@@ -143,7 +143,7 @@ describe("5. PATCH /api/reviews/:review_id tests", () => {
 			.send(inc_votes)
 			.expect(400)
 			.then((res) => {
-				expect(res.text).toBe("invalid update");
+				expect(res.body.msg).toBe("invalid update");
 			});
 	});
 });
