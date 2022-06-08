@@ -14,6 +14,10 @@ const {
 } = require("./controllers/comments-controller");
 app.use(express.json());
 
+app.get("/api", (req, res, next) => {
+  res.send({msg: "i like big butts"})
+})
+
 app.get("/api/categories", getCategories);
 app.get("/api/reviews/:review_id", getReviewById);
 app.get("/api/users", getAllUsers);
