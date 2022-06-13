@@ -1,4 +1,5 @@
 const express = require("express");
+const cors = require("cors")
 const app = express();
 const { getCategories } = require("./controllers/categories-controller.js");
 const { getAllUsers } = require("./controllers/users-controller")
@@ -12,8 +13,10 @@ const {
   postComment,
   deleteComment,
 } = require("./controllers/comments-controller");
-app.use(express.json());
 
+app.use(cors())
+
+app.use(express.json());
 app.get("/api", (req, res, next) => {
   res.send({msg: "i like big butts"})
 })
